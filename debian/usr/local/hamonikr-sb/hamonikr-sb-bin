@@ -1,0 +1,20 @@
+#!/bin/bash
+
+echo "하모니카 보안 체인을 설치합니다...."
+echo "설치를 위해 시스템 비밀번호를 입력하세요"
+echo ""
+cd /usr/local/hamonikr-sb
+sudo ./hamonikr-sb install
+
+clear
+echo "하모니카 보안 체인 설치가 완료 되었습니다."
+echo "=====  [ 자동으로 하모니카 시스템이 재 시작 됩니다.   ]  ====="
+echo "=====  [ 재시작 후 BIOS 에서 하모니카 키를 입력하세요 ]  ====="
+
+sleep 5
+
+rm -f /home/${userid}/Desktop/hamonikr-sb.desktop
+
+reboot
+
+exit 1

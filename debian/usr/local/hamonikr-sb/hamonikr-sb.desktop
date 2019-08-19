@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Name=Hamonize Secure Boot
+Name[ko]=하모니카 시큐어
+Comment=HamoniKR Secure Chainning
+Comment[ko]=하모니카 시큐어 체인을 적용합니다.
+Path=/usr/local/hamonikr-sb
+Exec=/usr/local/hamonikr-sb/hamonikr-sb-bin
+Terminal=true
+Type=Application
+Icon=/usr/share/icons/hicolor/256x256/apps/seahorse.png
+Categories=Utility;

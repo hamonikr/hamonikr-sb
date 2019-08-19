@@ -1,0 +1,11 @@
+#!/bin/bash
+
+userid=`sudo who | cut -d' ' -f 1`
+
+if [ -d "/usr/local/hamonikr-sb" ]; then
+    sudo rm -rf /usr/local/hamonikr-sb/
+fi
+
+if [ -e "/home/${userid}/Desktop/hamonikr-sb.desktop" ]; then
+    rm -f /home/${userid}/Desktop/hamonikr-sb.desktop
+fi

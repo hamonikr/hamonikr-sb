@@ -197,6 +197,9 @@ case "$1" in
 		ls -al ubuntu/
 		$0 verify
 		;;		
+	--help ) 
+		$0
+		;;		
 	*) 
 		echo "Secure Chainning Program for HamoniKR v 1.0"	
 		echo "=========================================================="	

@@ -16,6 +16,19 @@ Secure Boot Chain for HamoniKR
 sudo dpkg -i release/hamonikr-sb*.deb
 ```
 
+## 프로그램 실행
+
+```
+cd /usr/local/hamonikr-sb
+
+하모니카 시큐어 체인 적용
+sudo ./hamonikr-sb install
+
+하모니카 시큐어 체인을 제거하고 이전 설정으로 복구
+sudo ./hamonikr-sb restore
+```
+
+
 ## 프로그램 삭제
 
 ```

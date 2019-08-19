@@ -1,0 +1,5 @@
+#!/bin/bash
+
+userid=`sudo who | cut -d' ' -f 1`
+
+install -m 755 -o $userid -D /usr/local/hamonikr-sb/hamonikr-sb.desktop /home/$userid/Desktop
