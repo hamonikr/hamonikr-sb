@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# hamonikr-sb
+# hamonikr-sb v 1.0.1
 # Copyright (C) 2019 HamoniKR (https://hamonikr.org)
 
 # This program is free software: you can redistribute it and/or modify
@@ -29,19 +29,6 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
-# Print help message
-if [ -z "$1" ]
-then
-	echo "Secure Chainning Program for HamoniKR v 1.0"	
-	echo "=========================================================="	
-	echo "Usage : $0 install | restore | verify"
-	echo ""	
-	echo "sudo $0 install : Apply Secure Chain for HamoniKR"		
-	echo "sudo $0 restore : Restore Original Ubuntu Secure Chain"
-	echo "sudo $0 verify : Verify Secure Chain Sigining Files for HamoniKR"			
-	exit
-fi
-
 # Run with options
 case "$1" in
 	create-key ) echo "Create RSA key pair for HamoniKR"
@@ -65,10 +52,17 @@ case "$1" in
 		# 				$n hamonikr.der.siglist
 		# done	
 		;;
-	update-chain ) echo  "Apply Secure Chain for HamoniKR"
+
+	update-chain ) echo  "=============================================="
+		echo -e "${green}"	
+		echo  "Apply Secure Chain for HamoniKR"
 		if [ ! -d "ubuntu" ]; then
 			mkdir ubuntu
 		fi
+		# first, ubuntu sb backup
+		sudo cp /boot/efi/EFI/ubuntu/shimx64.efi ubuntu/shimx64.efi
+		sudo cp /boot/efi/EFI/ubuntu/grubx64.efi ubuntu/grubx64.efi				
+
 		if [ ! -d "output" ]; then
 			mkdir output
 		fi			
@@ -77,22 +71,23 @@ case "$1" in
 
 		# stage1 with shim
 		sudo sbsign --key hamonikr.rsa --cert hamonikr.pem --output output/shimx64.efi /boot/efi/efi/ubuntu/shimx64.efi
-		sudo cp /boot/efi/EFI/ubuntu/shimx64.efi{,.bak}
+		# sudo cp /boot/efi/EFI/ubuntu/shimx64.efi{,.bak}
 		sudo cp output/shimx64.efi /boot/efi/EFI/ubuntu/
 		sudo chmod 700 output/shimx64.efi /boot/efi/EFI/ubuntu/shimx64.efi
-		sudo cp /boot/efi/EFI/ubuntu/shimx64.efi.bak ubuntu/shimx64.efi
 		
 		# stage2 with grub
 		sudo sbsign --key hamonikr.rsa --cert hamonikr.pem --output output/grubx64.efi /boot/efi/efi/ubuntu/grubx64.efi
-		sudo cp /boot/efi/EFI/ubuntu/grubx64.efi{,.bak}
+		# sudo cp /boot/efi/EFI/ubuntu/grubx64.efi{,.bak}
 		sudo cp output/grubx64.efi /boot/efi/EFI/ubuntu/
 		sudo chmod 700 output/grubx64.efi /boot/efi/EFI/ubuntu/grubx64.efi		
-		sudo cp /boot/efi/EFI/ubuntu/grubx64.efi.bak ubuntu/grubx64.efi		
-
 		;;
-	verify ) echo  "Verify Secure Chain Sigining Files for HamoniKR"
+
+	verify-hamonikr ) echo  "=============================================="
 		echo -e "${green}"	
+		echo  "Verify Secure Chain Sigining Files for HamoniKR"	
+		echo -e "${red}"	
 		sudo sbverify --cert hamonikr.pem /boot/efi/efi/ubuntu/shimx64.efi     
+		echo ""			
 		sudo sbverify --cert hamonikr.pem /boot/efi/efi/ubuntu/grubx64.efi 
 		echo -e "${green}"				
 		echo -e "Current System Secure Booting State"
@@ -100,7 +95,48 @@ case "$1" in
 		sudo mokutil --sb-state
 		echo "${reset}"				
 		;;
-	install ) echo  "Install Secure Chain for HamoniKR"
+
+	verify-ubuntu ) echo  "=============================================="
+		# 검증을 위한 pem 파일 변환
+		# Ubuntu key download
+		# https://git.launchpad.net/qa-regression-testing/tree/notes_testing/secure-boot/keys
+
+		# Create ubuntu pem key 
+		# openssl x509 -inform DER -in ./keys/canonical-master-public.der \
+		# 			-outform PEM -out ./keys/canonical-master-public.pem
+
+		# Create MS pem key 
+		openssl x509 -inform DER -in ./keys/microsoft-kekca-public.der -outform PEM -out ./keys/microsoft-kekca-public.pem
+		openssl x509 -inform DER -in ./keys/microsoft-pca-public.der -outform PEM -out ./keys/microsoft-pca-public.pem
+		openssl x509 -inform DER -in ./keys/microsoft-uefica-public.der -outform PEM -out ./keys/microsoft-uefica-public.pem		
+
+		echo -e "${green}"	
+		echo  "Verify Secure Chain Sigining Files for Ubuntu"	
+		echo -e "${red}"	
+		sudo sbverify --cert ./keys/microsoft-uefica-public.pem /boot/efi/efi/ubuntu/shimx64.efi
+		
+		echo ""			
+		sudo sbverify --cert ./keys/canonical-master-public.pem /boot/efi/efi/ubuntu/grubx64.efi 
+		echo -e "${green}"				
+		echo -e "Current System Secure Booting State"
+		echo -e "${red}"		
+		sudo mokutil --sb-state
+		echo "${reset}"				
+		;;
+
+	verify ) echo  "=============================================="
+		echo -e "${green}"	
+		echo  "Verify Secure Chain for HamoniKR"
+		echo  ""	
+		echo  "Check HamoniKR Sign"		
+		$0 verify-hamonikr
+		echo  ""	
+		echo  "Check Ubuntu Sign"				
+		$0 verify-ubuntu		
+		;;		
+	install ) echo  "=============================================="
+		echo -e "${green}"	
+		echo  "Install Secure Chain for HamoniKR"
 		$0 update-chain
 		$0 verify
 
@@ -111,24 +147,64 @@ case "$1" in
 		echo -e "[CAUTION]CHANGE Secure SETTING in BIOS with /EFI/hamonikr.der KEY"
 		echo "${reset}"				
 		;;		
-	restore ) echo  "Restore Original Ubuntu Secure Chain"
+
+	restore ) echo  "=============================================="
+		echo -e "${green}"	
+		echo  "Restore Original Ubuntu Secure Chain"
 		# restore for stage1
-		sudo cp /boot/efi/EFI/ubuntu/shimx64.efi.bak /boot/efi/EFI/ubuntu/shimx64.efi
-		sudo rm -f /boot/efi/EFI/ubuntu/shimx64.efi.bak
+		if [ -e "ubuntu/shimx64.efi" ] ; then
+			sudo cp ubuntu/shimx64.efi /boot/efi/EFI/ubuntu/shimx64.efi
+		else
+			echo -e "${red}"			
+			echo "FILE NOT FOUND : ubuntu/shimx64.efi"
+			echo "${reset}"					
+			exit 1			
+		fi
 		
 		# restore for stage2
-		sudo cp /boot/efi/EFI/ubuntu/grubx64.efi.bak /boot/efi/EFI/ubuntu/grubx64.efi
-		sudo rm -f /boot/efi/EFI/ubuntu/grubx64.efi.bak
+		if [ -e "ubuntu/grubx64.efi" ] ; then
+			sudo cp ubuntu/grubx64.efi /boot/efi/EFI/ubuntu/grubx64.efi
+		else
+			echo -e "${red}"			
+			echo "FILE NOT FOUND : ubuntu/grubx64.efi"
+			echo "${reset}"					
+			exit 1
+		fi		
 
-		sudo rm -f /boot/efi/EFI/hamonikr.pem
-		sudo rm -f /boot/efi/EFI/hamonikr.der		
+		if [ -e "/boot/efi/EFI/hamonikr.der" ] ; then
+			sudo rm -f /boot/efi/EFI/hamonikr.der		
+		else
+			echo -e "${red}"			
+			echo "FILE NOT FOUND : /boot/efi/EFI/hamonikr.der"
+			echo "${reset}"					
+			exit 1
+		fi	
 
 		echo -e "${green}"	
 		echo -e "Finished Restore to Original Ubuntu Secure Chain."		
 		$0 verify		
 		echo "${reset}"			
 		;;						
+	backup ) echo  "=============================================="
+		echo -e "${green}"	
+		echo  "Backup Original Image to ./ubuntu folder"
+		if [ ! -d "ubuntu" ]; then
+			mkdir ubuntu
+		fi
+		# first, ubuntu sb backup
+		sudo cp /boot/efi/EFI/ubuntu/shimx64.efi ubuntu/shimx64.efi
+		sudo cp /boot/efi/EFI/ubuntu/grubx64.efi ubuntu/grubx64.efi
+		ls -al ubuntu/
+		$0 verify
+		;;		
 	*) 
-		$0	
+		echo "Secure Chainning Program for HamoniKR v 1.0"	
+		echo "=========================================================="	
+		echo "Usage : $0 install | restore | verify"
+		echo ""	
+		echo "sudo $0 install : Apply Secure Chain for HamoniKR"		
+		echo "sudo $0 restore : Restore Original Ubuntu Secure Chain"
+		echo "sudo $0 verify : Verify Secure Chain Sigining Files for HamoniKR"			
+		exit
 	;;
 esac
