@@ -19,12 +19,16 @@ cd hamonikr-secure-chain
 
 # Usage 
 
-## Create RSA key pair for HamoniKR
-```./hamonikr-secure-chain.sh create-key```
+## 기존 시큐어 부팅 이미지를 백업
+```sudo ./hamonikr-sb backup```
 
-## Apply Secure Chain for HamoniKR
+## HamoniKR 전용 시큐어 체인을 적용
 
-```./hamonikr-secure-chain.sh update-chain```
+```sudo ./hamonikr-sb install```
 
-## Verify Secure Chain Sigining Files for HamoniKR
-```./hamonikr-secure-chain.sh verify```
+## 우분투와 하모니카의 Secure Chain 서명을 검증
+```sudo ./hamonikr-sb verify```
+
+## 기존의 Ubuntu 시큐어 체인을 복원
+
+```sudo ./hamonikr-sb restore```
