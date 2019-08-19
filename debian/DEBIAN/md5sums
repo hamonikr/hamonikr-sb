@@ -1,0 +1,14 @@
+432c100a1a1c92f15ac64841b17c2a25  usr/local/hamonikr-sb/hamonikr.pem
+e793b11d03d7d724ad73a163883e4301  usr/local/hamonikr-sb/keys/canonical-master-public.pem
+8fa61940739aeffe4ff98671a62b7be2  usr/local/hamonikr-sb/keys/microsoft-kekca-public.pem
+21f4863b43b064fe78c253cfe3f4d04b  usr/local/hamonikr-sb/keys/microsoft-kekca-public.der
+59a4ff2ec0d504723b96c5f4ec68c0bf  usr/local/hamonikr-sb/keys/canonical-signing-public.der
+eeea9da99ab9a11f36784c94e15c69f4  usr/local/hamonikr-sb/keys/microsoft-uefica-public.pem
+af749a216c00c7d25c249fca0d7fd471  usr/local/hamonikr-sb/keys/microsoft-pca-public.der
+e18b968c57b0fee46d8c9da545391a82  usr/local/hamonikr-sb/keys/microsoft-uefica-public.der
+35a2f9dd37555a38320fbea1b8aa029d  usr/local/hamonikr-sb/keys/microsoft-pca-public.pem
+12f7824aa0864d47ac27accbb1f5dff4  usr/local/hamonikr-sb/keys/canonical-master-public.der
+075741ad82f993615560eaf29334c685  usr/local/hamonikr-sb/hamonikr.rsa
+2c6803a9dbb2b3fdb63f94077d217ab1  usr/local/hamonikr-sb/README.md
+52712b4dd87ce19d6e31822d8fce762a  usr/local/hamonikr-sb/hamonikr.der
+5eefc65376791a7c83a3a8f77cd074cb  usr/local/hamonikr-sb/hamonikr-sb

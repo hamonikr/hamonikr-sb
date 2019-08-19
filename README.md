@@ -1,34 +1,27 @@
-# hamonikr-secure-chain
+# hamonikr-sb
 
-배포되는 하모니카OS가 아닌 다른 운영체제로 부팅을 방지하는 프로그램
+Secure Boot Chain for HamoniKR
 
-* 하모니카 디지털 사인을 검증하여 인가되지 않은 운영체제의 부팅을 방지
-* UEFI 모드의 부팅환경에서만 사용 가능
-* 관련 기술문서 : https://pms.invesume.com:8444/display/A1/UEFI+Secure+Boot
+## 데비안 패키지 빌드
 
-# License
-
-* GPL v3
-
-# Download
+다운로드 받은 디렉토리 안에서 아래와 같이 빌드하면 release 폴더 안에 설치 가능한 데비안 파일 생성
 
 ```
-git clone ssh://git@pms.invesume.com:7999/hos/hamonikr-secure-chain.git
-cd hamonikr-secure-chain
+./build
 ```
 
-# Usage 
+## 프로그램 설치
 
-## 기존 시큐어 부팅 이미지를 백업
-```sudo ./hamonikr-sb backup```
+```
+sudo dpkg -i release/hamonikr-sb*.deb
+```
 
-## HamoniKR 전용 시큐어 체인을 적용
+## 프로그램 삭제
 
-```sudo ./hamonikr-sb install```
+```
+sudo apt purge hamonikr-sb
+```
 
-## 우분투와 하모니카의 Secure Chain 서명을 검증
-```sudo ./hamonikr-sb verify```
+## 버그 또는 이슈 제출
 
-## 기존의 Ubuntu 시큐어 체인을 복원
-
-```sudo ./hamonikr-sb restore```
+사용 중 발견한 버그나 이슈는 help@hamonikr.org 로 메일을 보내주세요

@@ -1,0 +1,14 @@
+Package: hamonikr-sb
+Version: 1.0.0
+Architecture: amd64
+Maintainer: HamoniKR Team (HamoniKR OS Developement Group) <hamonikr-packages@googlegroups.com>
+Installed-Size: 84
+Pre-Depends: dpkg (>= 1.15.6)
+Depends:
+Recommends: 
+Section: Development
+Priority: optional
+Homepage: https://hamonikr.org
+Description: Secure Boot Chain for HamoniKR
+ This program provice to create secure boot chainning with HamoniKR sign.
+
